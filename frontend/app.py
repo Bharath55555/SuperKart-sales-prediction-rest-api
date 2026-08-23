@@ -11,7 +11,7 @@ st.title("SuperKart Product Sales Prediction")
 # Section for online prediction
 st.subheader("Online Prediction")
 
-# Collect user input for property features
+# Collect user input for product features
 Product_Weight = st.number_input("Product_Weight", min_value=0.0, max_value=40.0, step=0.1, value=10.0)
 Product_Sugar_Content = st.selectbox("Product_Sugar_Content", ["Low Sugar", "Medium Sugar", "High Sugar"])
 Product_Allocated_Area = st.number_input("Product_Allocated_Area", min_value=0.0, max_value=10.0, step=0.01, value=0.5)
@@ -39,7 +39,7 @@ input_data = pd.DataFrame([{
 
 # Make prediction when the "Predict" button is clicked
 if st.button("Predict", type="primary"):
-    response = requests.post(f"{BACKEND_URL}/v1/rental", json=input_data.to_dict(orient='records')[0])  # Send data to Flask API
+    response = requests.post(f"{BACKEND_URL}/v1/sales", json=input_data.to_dict(orient='records')[0])  # Send data to Flask API
     if response.status_code == 200:
         prediction = response.json()['Product Sales (in dollars)']
         st.success(f"Predicted Product Sales (in dollars): {prediction}")
@@ -55,7 +55,7 @@ uploaded_file = st.file_uploader("Upload CSV file for batch prediction", type=["
 # Make batch prediction when the "Predict Batch" button is clicked
 if uploaded_file is not None:
     if st.button("Predict Batch", type="primary"):
-        response = requests.post(f"{BACKEND_URL}/v1/rentalbatch", files={"file": uploaded_file})  # Send file to Flask API
+        response = requests.post(f"{BACKEND_URL}/v1/salesbatch", files={"file": uploaded_file})  # Send file to Flask API
         if response.status_code == 200:
             predictions = response.json()
             st.success("Batch predictions completed!")
